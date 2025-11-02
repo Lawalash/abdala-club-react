@@ -1,21 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import logo from '../../assets/logo/logo-teste.png' // ajuste se necessário
 import './Header.css'
 
 export default function Header({ onToggleSidebar }) {
+  const location = useLocation()
   const [scrolled, setScrolled] = useState(false)
   const [visible, setVisible] = useState(true)
   const lastScrollY = useRef(0)
   const ticking = useRef(false)
+  const isRegistrationPage = location.pathname.startsWith('/cadastro')
 
   useEffect(() => {
+    if (isRegistrationPage) {
+      setScrolled(false)
+      setVisible(true)
+      lastScrollY.current = 0
+      ticking.current = false
+      return undefined
+    }
+
     const handleScroll = () => {
       const currentY = window.scrollY
 
       if (!ticking.current) {
         window.requestAnimationFrame(() => {
-          // aparecer/ocultar header conforme direção do scroll
           if (currentY > lastScrollY.current && currentY > 80) {
             setVisible(false)
           } else {
@@ -32,7 +41,7 @@ export default function Header({ onToggleSidebar }) {
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isRegistrationPage])
 
   const menuItems = [
     { to: '/', label: 'Home' },
@@ -43,11 +52,15 @@ export default function Header({ onToggleSidebar }) {
     { to: '#contact', label: 'Contato' }
   ]
 
+  const headerClassName = [
+    'site-header',
+    scrolled ? 'scrolled' : '',
+    !visible ? 'hidden' : '',
+    isRegistrationPage ? 'site-header--static' : ''
+  ].filter(Boolean).join(' ')
+
   return (
-    <header
-      className={`site-header ${scrolled ? 'scrolled' : ''} ${visible ? '' : 'hidden'}`}
-      role="banner"
-    >
+    <header className={headerClassName} role="banner">
       <div className="site-header-inner">
         <button
           className="nav-toggle"

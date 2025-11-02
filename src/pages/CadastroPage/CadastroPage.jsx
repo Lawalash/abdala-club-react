@@ -1,15 +1,22 @@
 import React from 'react'
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm'
-import '../CadastroPage/CadastroPage.css'
+import './CadastroPage.css'
 
-export default function CadastroPage(){
+export default function CadastroPage() {
   return (
-    <main>
-      <section className="form-section">
-        <div className="form-container">
-          <RegistrationForm />
+    <div className="cadastro-page">
+      <section className="cadastro-hero" aria-labelledby="cadastro-title">
+        <div className="cadastro-hero__content">
+          <h1 id="cadastro-title">Finalize seu cadastro</h1>
+          <p>
+            Complete o formulário para escolher a unidade, o plano ideal e garantir sua vaga no Abdala Club.
+          </p>
         </div>
       </section>
-    </main>
+
+      <section className="cadastro-form-area" aria-label="Formulário de cadastro">
+        <RegistrationForm />
+      </section>
+    </div>
   )
 }
