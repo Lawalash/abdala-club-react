@@ -227,141 +227,169 @@
   box-shadow: 0 12px 30px rgba(255, 107, 0, 0.35);
 }
 
-.plans-grid {
+.registration-plans-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: clamp(1.25rem, 3vw, 2rem);
-  margin-bottom: 2rem;
+  gap: clamp(1.5rem, 3.5vw, 2.25rem);
+  margin-bottom: 2.25rem;
 }
 
-.plan-card {
-  border-radius: var(--radius-md);
-  padding: 1.75rem;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
+.registration-plan-card {
+  border-radius: 24px;
+  padding: clamp(1.75rem, 3.5vw, 2.4rem);
+  border: 1px solid rgba(255, 107, 0, 0.12);
+  background: linear-gradient(180deg, #ffffff 0%, #fff8f2 100%);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.1rem;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
   min-height: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
-.plan-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-sm);
-  border-color: rgba(255, 107, 0, 0.4);
+.registration-plan-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(255, 148, 67, 0.18), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
 }
 
-.plan-card.selected {
+.registration-plan-card:hover::before,
+.registration-plan-card--selected::before {
+  opacity: 1;
+}
+
+.registration-plan-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 50px rgba(255, 107, 0, 0.22);
+  border-color: rgba(255, 107, 0, 0.32);
+}
+
+.registration-plan-card--selected {
   border-color: transparent;
-  box-shadow: 0 24px 55px rgba(255, 107, 0, 0.28);
-  background: linear-gradient(160deg, rgba(255, 107, 0, 0.08), rgba(255, 107, 0, 0));
+  box-shadow: 0 30px 65px rgba(255, 107, 0, 0.28);
 }
 
-.plan-card.highlight-plan {
-  border-image: linear-gradient(135deg, rgba(255, 107, 0, 0.35), rgba(255, 107, 0, 0)) 1;
+.registration-plan-card--highlight {
+  border-color: rgba(16, 185, 129, 0.35);
 }
 
-.plan-header {
+.registration-plan-card__header {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.7rem;
+  position: relative;
+  z-index: 1;
 }
 
-.plan-pill {
-  align-self: flex-start;
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  background: rgba(255, 107, 0, 0.12);
-  color: var(--color-accent-dark);
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.plan-header h3 {
-  font-size: 1.35rem;
+.registration-plan-card__header h3 {
+  font-size: 1.4rem;
   color: var(--color-text);
   margin: 0;
 }
 
-.plan-price span {
-  font-size: 1.5rem;
+.registration-plan-card__pill {
+  align-self: flex-start;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 107, 0, 0.18);
+  color: var(--color-accent-dark);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.registration-plan-card__price span {
+  font-size: 1.55rem;
   font-weight: 700;
   color: var(--color-text);
 }
 
-.monthly-price {
-  font-size: 0.9rem;
-  color: var(--color-muted);
-  margin-top: 0.25rem;
+.registration-plan-card__monthly {
+  font-size: 0.95rem;
+  color: #ea580c;
+  margin-top: 0.35rem;
+  font-weight: 600;
 }
 
-.plan-description {
-  color: var(--color-muted);
-  line-height: 1.55;
+.registration-plan-card__description {
+  color: #475569;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
 }
 
-.benefits-toggle {
+.registration-plan-card__benefits-toggle {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid transparent;
-  background: rgba(15, 23, 42, 0.04);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 107, 0, 0.24);
+  background: rgba(255, 255, 255, 0.75);
+  padding: 0.85rem 1.1rem;
+  border-radius: 16px;
   cursor: pointer;
   font-weight: 600;
   color: var(--color-text);
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
-.benefits-toggle:hover {
-  border-color: rgba(255, 107, 0, 0.5);
-  background: rgba(255, 107, 0, 0.12);
+.registration-plan-card__benefits-toggle:hover {
+  border-color: rgba(255, 107, 0, 0.45);
+  background: rgba(255, 241, 233, 0.9);
+  box-shadow: 0 14px 28px rgba(255, 107, 0, 0.18);
 }
 
-.benefits-list {
+.registration-plan-card__benefits-list {
   list-style: none;
   margin: 0;
   padding: 0;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s ease;
+  position: relative;
+  z-index: 1;
 }
 
-.benefits-list.active {
-  max-height: 320px;
-  margin-top: 0.5rem;
+.registration-plan-card__benefits-list.is-active {
+  max-height: 360px;
+  margin-top: 0.55rem;
 }
 
-.benefits-list li {
+.registration-plan-card__benefits-list li {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.4rem 0;
-  color: var(--color-muted);
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  color: #4b5563;
 }
 
-.benefits-list li i {
+.registration-plan-card__benefits-list li i {
   color: var(--color-success);
 }
 
-.plan-choose-btn {
+.registration-plan-card__cta {
   margin-top: auto;
-  padding: 0.85rem 1rem;
+  padding: 0.9rem 1.1rem;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 16px;
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
   color: #fff;
   font-weight: 700;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
-.plan-choose-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 35px rgba(255, 107, 0, 0.35);
+.registration-plan-card__cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 45px rgba(255, 107, 0, 0.32);
 }
 
 .frequency-selection {

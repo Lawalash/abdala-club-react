@@ -440,7 +440,7 @@ export default function RegistrationForm() {
             <h2>Escolha seu Plano</h2>
             <p className="section-description">Selecione o plano que melhor atende às suas necessidades</p>
 
-            <div className="plans-grid">
+            <div className="registration-plans-grid">
               {Object.entries(PLAN_CONFIG).map(([key, plan]) => {
                 const variantValues = plan.variants ? Object.values(plan.variants) : []
                 const lowestMonthly = variantValues.length
@@ -449,7 +449,9 @@ export default function RegistrationForm() {
                 return (
                   <article
                     key={key}
-                    className={`plan-card ${form.plan === key ? 'selected' : ''} ${HIGHLIGHTED_PLANS.has(key) ? 'highlight-plan' : ''}`}
+                    className={`registration-plan-card ${
+                      form.plan === key ? 'registration-plan-card--selected' : ''
+                    } ${HIGHLIGHTED_PLANS.has(key) ? 'registration-plan-card--highlight' : ''}`}
                     onClick={() => selectPlan(key)}
                     onKeyDown={(event) => {
                       if (event.key === 'Enter' || event.key === ' ') {
@@ -461,10 +463,10 @@ export default function RegistrationForm() {
                     role="button"
                     aria-pressed={form.plan === key}
                   >
-                    <header className="plan-header">
-                      <span className="plan-pill">{plan.total ? 'Pagamento único' : 'Assinatura'}</span>
+                    <header className="registration-plan-card__header">
+                      <span className="registration-plan-card__pill">{plan.total ? 'Pagamento único' : 'Assinatura'}</span>
                       <h3>{plan.name}</h3>
-                      <div className="plan-price">
+                      <div className="registration-plan-card__price">
                         {plan.total ? (
                           <span>{formatBRL(plan.total)}</span>
                         ) : plan.variants ? (
@@ -472,15 +474,17 @@ export default function RegistrationForm() {
                         ) : (
                           <span>{formatBRL(plan.mensal)}/mês</span>
                         )}
-                        {plan.matricula && <div className="monthly-price">Matrícula: {formatBRL(plan.matricula)}</div>}
+                        {plan.matricula && (
+                          <div className="registration-plan-card__monthly">Matrícula: {formatBRL(plan.matricula)}</div>
+                        )}
                       </div>
                     </header>
 
-                    <p className="plan-description">{plan.features?.[0] || ''}</p>
+                    <p className="registration-plan-card__description">{plan.features?.[0] || ''}</p>
 
                     <button
                       type="button"
-                      className="benefits-toggle"
+                      className="registration-plan-card__benefits-toggle"
                       onClick={(event) => {
                         event.stopPropagation()
                         togglePlanFeatures(key)
@@ -491,7 +495,11 @@ export default function RegistrationForm() {
                       <i className={`fas ${showFeaturesFor === key ? 'fa-chevron-up' : 'fa-chevron-down'}`} aria-hidden="true" />
                     </button>
 
-                    <ul className={`benefits-list ${showFeaturesFor === key ? 'active' : ''}`}>
+                    <ul
+                      className={`registration-plan-card__benefits-list ${
+                        showFeaturesFor === key ? 'is-active' : ''
+                      }`}
+                    >
                       {plan.features?.map((feature, index) => (
                         <li key={feature + index}>
                           <i className="fas fa-check-circle" aria-hidden="true" />
@@ -502,7 +510,7 @@ export default function RegistrationForm() {
 
                     <button
                       type="button"
-                      className="btn plan-choose-btn"
+                      className="btn registration-plan-card__cta"
                       onClick={(event) => {
                         event.stopPropagation()
                         selectPlan(key)

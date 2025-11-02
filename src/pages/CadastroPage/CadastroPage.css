@@ -1,0 +1,50 @@
+.cadastro-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fff6ed 0%, #f6f7fb 40%, #ffffff 100%);
+  padding-top: clamp(5.5rem, 8vw, 7rem);
+  padding-bottom: clamp(3rem, 8vw, 5rem);
+}
+
+.cadastro-hero {
+  max-width: 1100px;
+  margin: 0 auto clamp(2.5rem, 6vw, 4rem);
+  padding: 0 clamp(1.5rem, 6vw, 4rem);
+  text-align: center;
+}
+
+.cadastro-hero__content {
+  background: linear-gradient(135deg, rgba(255, 107, 0, 0.12), rgba(255, 107, 0, 0.05));
+  border-radius: 28px;
+  padding: clamp(2rem, 5vw, 3.75rem);
+  box-shadow: 0 20px 45px rgba(255, 107, 0, 0.15);
+}
+
+.cadastro-hero h1 {
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+}
+
+.cadastro-hero p {
+  max-width: 620px;
+  margin: 0 auto;
+  color: #4b5563;
+  font-size: clamp(1rem, 2.2vw, 1.1rem);
+  line-height: 1.6;
+}
+
+.cadastro-form-area {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 5vw, 4rem);
+}
+
+@media (max-width: 768px) {
+  .cadastro-page {
+    padding-top: 5rem;
+  }
+
+  .cadastro-hero__content {
+    padding: clamp(1.5rem, 5vw, 2.75rem);
+  }
+}
