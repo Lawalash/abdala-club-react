@@ -165,6 +165,41 @@ const formatBRL = value => {
   return currencyFormatter.format(Number(value))
 }
 
+const formatPhoneNumber = (value = '') => {
+  const digits = value.replace(/\D/g, '').slice(0, 11)
+
+  if (digits.length === 0) return ''
+  if (digits.length < 2) return `(${digits}`
+
+  const ddd = digits.slice(0, 2)
+  const localNumber = digits.slice(2)
+
+  if (digits.length === 2) {
+    return `(${ddd}) `
+  }
+
+  if (localNumber.length <= 4) {
+    return `(${ddd}) ${localNumber}`
+  }
+
+  const prefix = localNumber.slice(0, localNumber.length - 4)
+  const suffix = localNumber.slice(-4)
+  return `(${ddd}) ${prefix}-${suffix}`
+}
+
+const formatZipcode = (value = '') => {
+  const digits = value.replace(/\D/g, '').slice(0, 8)
+  if (digits.length <= 5) return digits
+  return `${digits.slice(0, 5)}-${digits.slice(5)}`
+}
+
+const formatDateToBR = (value = '') => {
+  if (!value) return '-'
+  const [year, month, day] = value.split('-')
+  if (!year || !month || !day) return value
+  return `${day}/${month}/${year}`
+}
+
 export default function RegistrationForm() {
   const [step, setStep] = useState(1)
   const [form, setForm] = useState(() => ({
@@ -176,6 +211,7 @@ export default function RegistrationForm() {
     email: '',
     birthdate: '',
     address: '',
+    addressNumber: '',
     neighborhood: '',
     city: '',
     state: '',
@@ -246,7 +282,18 @@ export default function RegistrationForm() {
   const handleChange = useCallback((event) => {
     const { id, name, value } = event.target
     const field = name || id
-    setForm(prev => ({ ...prev, [field]: value }))
+
+    let nextValue = value
+
+    if (field === 'phone') {
+      nextValue = formatPhoneNumber(value)
+    } else if (field === 'zipcode') {
+      nextValue = formatZipcode(value)
+    } else if (field === 'state') {
+      nextValue = value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2)
+    }
+
+    setForm(prev => ({ ...prev, [field]: nextValue }))
     setErrors(prev => {
       if (!prev[field]) return prev
       const { [field]: _removed, ...rest } = prev
@@ -353,6 +400,68 @@ export default function RegistrationForm() {
     }
   }, [form.zipcode])
 
+  const selectedPlan = PLAN_CONFIG[form.plan]
+  const planHasVariants = !!selectedPlan?.variants
+
+  const whatsappInfo = useMemo(() => {
+    const unitLabel = form.unit === 'cuites'
+      ? 'Abdala Club Academia Cuítes'
+      : form.unit === 'palmeira'
+        ? 'Abdala Club Academia Palmeira'
+        : '-'
+    const frequencyLabel = form.frequency === '3dias'
+      ? '3 dias por semana'
+      : form.frequency === 'todos'
+        ? 'Todos os dias'
+        : ''
+    const healthLabel = form.healthIssue || '-'
+    const paymentLabel = form.paymentMethod || '-'
+    const addressLine = [
+      form.address,
+      form.addressNumber && `nº ${form.addressNumber}`,
+      form.neighborhood
+    ].filter(Boolean).join(', ')
+    const locationLine = [form.city, form.state].filter(Boolean).join(' - ')
+
+    const messageLines = [
+      'Olá! Gostaria de finalizar meu cadastro no Abdala Club.',
+      '',
+      `Unidade: ${unitLabel}`,
+      `Plano: ${selectedPlan?.name || '-'}`,
+      frequencyLabel ? `Frequência: ${frequencyLabel}` : null,
+      `Matrícula: ${formatBRL(summary.enrollment)}`,
+      `Mensalidade: ${formatBRL(summary.monthly)}`,
+      `Total: ${formatBRL(summary.total)}`,
+      '',
+      `Nome: ${form.name}`,
+      `Telefone: ${form.phone}`,
+      `Email: ${form.email}`,
+      `Data de nascimento: ${formatDateToBR(form.birthdate)}`,
+      `Endereço: ${addressLine || '-'}`,
+      `Cidade/Estado: ${locationLine || '-'}`,
+      '',
+      `Condição de saúde: ${healthLabel}`,
+      form.healthIssue === 'Outro' && form.otherHealthDescription
+        ? `Detalhes de saúde: ${form.otherHealthDescription}`
+        : null,
+      `Objetivo de treino: ${form.trainingGoal || '-'}`,
+      `Forma de pagamento: ${paymentLabel}`,
+      '',
+      'Podem me ajudar com os próximos passos? Obrigado!'
+    ].filter(Boolean)
+
+    return {
+      unitLabel,
+      frequencyLabel,
+      healthLabel,
+      paymentLabel,
+      addressLine,
+      locationLine,
+      messageLines,
+      messageText: messageLines.join('\n')
+    }
+  }, [form, selectedPlan, summary])
+
   const handleSubmit = useCallback((event) => {
     event.preventDefault()
     if (!validateStep()) return
@@ -363,10 +472,15 @@ export default function RegistrationForm() {
       submittedAt: new Date().toISOString()
     }
 
+    const whatsappNumber = '5583993725984'
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappInfo.messageText)}`
+
+    if (typeof window !== 'undefined') {
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+    }
+
     console.log('Dados do cadastro:', formData)
-    alert('Cadastro enviado com sucesso!')
-    console.log('Redirecionar para: /obrigado')
-  }, [form, summary, validateStep])
+  }, [form, summary, validateStep, whatsappInfo.messageText])
 
   const selectPlan = useCallback((key) => {
     setForm(prev => ({ ...prev, plan: key, frequency: '' }))
@@ -380,9 +494,6 @@ export default function RegistrationForm() {
   const togglePlanFeatures = useCallback((key) => {
     setShowFeaturesFor(prev => (prev === key ? null : key))
   }, [])
-
-  const selectedPlan = PLAN_CONFIG[form.plan]
-  const planHasVariants = !!selectedPlan?.variants
 
   return (
     <div className="registration-container white-bg">
@@ -661,7 +772,17 @@ export default function RegistrationForm() {
                   autoComplete="postal-code"
                 />
                 <button type="button" onClick={handleFetchAddress} className="btn btn-cep" disabled={cepLoading}>
-                  {cepLoading ? 'Buscando...' : 'Buscar endereço'}
+                  {cepLoading ? (
+                    <>
+                      <i className="fas fa-spinner fa-spin" aria-hidden="true" />
+                      Buscando...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-search-location" aria-hidden="true" />
+                      Buscar endereço
+                    </>
+                  )}
                 </button>
               </div>
               {errors.zipcode && <span className="error-message" role="alert">{errors.zipcode}</span>}
@@ -682,16 +803,30 @@ export default function RegistrationForm() {
               {errors.address && <span className="error-message" role="alert">{errors.address}</span>}
             </div>
 
-            <div className="form-group">
-              <label htmlFor="neighborhood">Bairro</label>
-              <input
-                id="neighborhood"
-                name="neighborhood"
-                value={form.neighborhood}
-                onChange={handleChange}
-                placeholder="Bairro"
-                autoComplete="address-line2"
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="addressNumber">Número</label>
+                <input
+                  id="addressNumber"
+                  name="addressNumber"
+                  value={form.addressNumber}
+                  onChange={handleChange}
+                  placeholder="Número da residência"
+                  autoComplete="address-line2"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="neighborhood">Bairro</label>
+                <input
+                  id="neighborhood"
+                  name="neighborhood"
+                  value={form.neighborhood}
+                  onChange={handleChange}
+                  placeholder="Bairro"
+                  autoComplete="address-line3"
+                />
+              </div>
             </div>
 
             <div className="form-row">
@@ -739,13 +874,17 @@ export default function RegistrationForm() {
         )}
 
         {step === 4 && (
-          <div className="form-step">
+          <div className="form-step form-step--wellness">
             <h2>Problemas de Saúde</h2>
             <p className="section-description">Conte-nos se possui algum ponto de atenção para personalizarmos o treino</p>
+            <div className="step-highlight">
+              <i className="fas fa-heartbeat" aria-hidden="true" />
+              <span>Compartilhe informações importantes para cuidarmos da sua experiência com toda atenção.</span>
+            </div>
             <div className="form-group">
               <fieldset>
                 <legend>Você possui algum problema de saúde? *</legend>
-                <div className="radio-group">
+                <div className="radio-group radio-group--cards">
                   {HEALTH_OPTIONS.map(option => (
                     <label key={option.value}>
                       <input
@@ -755,7 +894,7 @@ export default function RegistrationForm() {
                         checked={form.healthIssue === option.value}
                         onChange={handleChange}
                       />
-                      {option.label}
+                      <span>{option.label}</span>
                     </label>
                   ))}
                 </div>
@@ -789,13 +928,17 @@ export default function RegistrationForm() {
         )}
 
         {step === 5 && (
-          <div className="form-step">
+          <div className="form-step form-step--goals">
             <h2>Objetivo de Treino</h2>
             <p className="section-description">Selecione o foco principal do seu treinamento</p>
+            <div className="step-highlight">
+              <i className="fas fa-bullseye" aria-hidden="true" />
+              <span>Conte para a gente qual é o seu objetivo para indicarmos o melhor caminho.</span>
+            </div>
             <div className="form-group">
               <fieldset>
                 <legend>Qual seu principal objetivo? *</legend>
-                <div className="radio-group">
+                <div className="radio-group radio-group--cards">
                   {TRAINING_GOALS.map(option => (
                     <label key={option.value}>
                       <input
@@ -805,7 +948,7 @@ export default function RegistrationForm() {
                         checked={form.trainingGoal === option.value}
                         onChange={handleChange}
                       />
-                      {option.label}
+                      <span>{option.label}</span>
                     </label>
                   ))}
                 </div>
@@ -825,13 +968,20 @@ export default function RegistrationForm() {
         )}
 
         {step === 6 && (
-          <div className="form-step">
+          <div className="form-step form-step--checkout">
             <h2>Forma de Pagamento</h2>
             <p className="section-description">Escolha como deseja efetuar o pagamento</p>
+            <div className="step-highlight step-highlight--whatsapp">
+              <i className="fab fa-whatsapp" aria-hidden="true" />
+              <div>
+                <strong>Envio direto pelo WhatsApp</strong>
+                <span>Seu cadastro será enviado automaticamente para (83) 99372-5984.</span>
+              </div>
+            </div>
             <div className="form-group">
               <fieldset>
                 <legend>Escolha a forma de pagamento *</legend>
-                <div className="radio-group">
+                <div className="radio-group radio-group--cards">
                   {PAYMENT_METHODS.map(option => (
                     <label key={option}>
                       <input
@@ -841,7 +991,7 @@ export default function RegistrationForm() {
                         checked={form.paymentMethod === option}
                         onChange={handleChange}
                       />
-                      {option}
+                      <span>{option}</span>
                     </label>
                   ))}
                 </div>
@@ -870,12 +1020,24 @@ export default function RegistrationForm() {
               </p>
             </div>
 
+            <div className="whatsapp-preview" aria-live="polite">
+              <div className="whatsapp-preview__header">
+                <i className="fab fa-whatsapp" aria-hidden="true" />
+                <div>
+                  <span>Mensagem para</span>
+                  <strong>(83) 99372-5984</strong>
+                </div>
+              </div>
+              <p className="whatsapp-preview__note">Revise abaixo o texto que será enviado para nossa equipe.</p>
+              <pre className="whatsapp-preview__message">{whatsappInfo.messageText}</pre>
+            </div>
+
             <div className="form-navigation">
               <button type="button" onClick={goToPreviousStep} className="btn btn-prev">
                 Voltar
               </button>
               <button type="submit" className="btn btn-submit">
-                Finalizar cadastro
+                Enviar via WhatsApp
               </button>
             </div>
           </div>
