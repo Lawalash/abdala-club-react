@@ -186,6 +186,38 @@
   box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15);
 }
 
+.form-group input[type='tel'] {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.form-group input[type='date'] {
+  appearance: none;
+  -webkit-appearance: none;
+  background: linear-gradient(135deg, #ffffff, #f7fafc);
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding-right: 3rem;
+  position: relative;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23ff6b00' stroke-width='1.5' viewBox='0 0 24 24'%3E%3Crect x='3.75' y='4.5' width='16.5' height='16.5' rx='2.25'/%3E%3Cpath d='M16.5 3v3M7.5 3v3M3.75 9h16.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.1rem center;
+  background-size: 22px;
+}
+
+.form-group input[type='date']::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.form-group input[type='date']:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.14);
+}
+
 .error-message {
   margin-top: 0.45rem;
   color: #ef4444;
@@ -204,27 +236,42 @@
 }
 
 .btn-cep {
-  padding: 0.85rem 1.5rem;
-  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: 18px;
   border: none;
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+  background: linear-gradient(135deg, #ff8a3d, #ff6b00);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
   white-space: nowrap;
+  box-shadow: 0 14px 28px rgba(255, 107, 0, 0.28);
+  text-align: center;
+}
+
+.btn-cep i {
+  font-size: 1rem;
 }
 
 .btn-cep:disabled {
-  opacity: 0.6;
+  opacity: 0.65;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  filter: grayscale(0.2);
 }
 
 .btn-cep:not(:disabled):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(255, 107, 0, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 18px 36px rgba(255, 107, 0, 0.35);
+}
+
+.btn-cep:not(:disabled):active {
+  transform: translateY(-1px);
 }
 
 .registration-plans-grid {
@@ -232,6 +279,7 @@
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: clamp(1.5rem, 3.5vw, 2.25rem);
   margin-bottom: 2.25rem;
+  align-items: flex-start;
 }
 
 .registration-plan-card {
@@ -244,7 +292,7 @@
   gap: 1.1rem;
   cursor: pointer;
   transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
-  min-height: 100%;
+  min-height: auto;
   position: relative;
   overflow: hidden;
 }
@@ -432,6 +480,55 @@
   box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.18);
 }
 
+.radio-group--cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.radio-group--cards label {
+  align-items: flex-start;
+  padding: 1.2rem 1.4rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 107, 0, 0.18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 245, 236, 0.92) 100%);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.radio-group--cards label:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 107, 0, 0.35);
+  background: linear-gradient(180deg, rgba(255, 248, 242, 0.96) 0%, rgba(255, 239, 224, 0.95) 100%);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
+}
+
+.radio-group--cards label input {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.radio-group--cards label span {
+  display: block;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
+.radio-group--cards label:has(input:checked) {
+  border-color: rgba(255, 107, 0, 0.55);
+  box-shadow:
+    0 0 0 4px rgba(255, 107, 0, 0.16),
+    0 26px 52px rgba(255, 107, 0, 0.18);
+  background: linear-gradient(180deg, rgba(255, 244, 234, 0.96) 0%, rgba(255, 233, 213, 0.98) 100%);
+}
+
+.radio-group--cards label:has(input:checked) span {
+  color: var(--color-accent-dark);
+}
+
 .summary-box {
   border-radius: var(--radius-md);
   padding: 1.75rem;
@@ -511,6 +608,132 @@
 .btn-submit {
   background: linear-gradient(135deg, #111827, #0f172a);
   color: #fff;
+}
+
+.form-step--wellness,
+.form-step--goals,
+.form-step--checkout {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 247, 238, 0.95));
+  border-radius: 28px;
+  padding: clamp(1.75rem, 4vw, 3rem);
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12);
+}
+
+.form-step--checkout {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(236, 253, 245, 0.96));
+}
+
+.step-highlight {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  background: rgba(255, 107, 0, 0.08);
+  border: 1px solid rgba(255, 107, 0, 0.18);
+  border-radius: 18px;
+  padding: 0.9rem 1.2rem;
+  margin: 0 auto 1.75rem;
+  max-width: 620px;
+  color: #9a3412;
+  box-shadow: inset 0 0 0 1px rgba(255, 107, 0, 0.12);
+}
+
+.step-highlight i {
+  font-size: 1.3rem;
+  color: #fb923c;
+}
+
+.step-highlight span {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.step-highlight--whatsapp {
+  background: rgba(37, 211, 102, 0.12);
+  border-color: rgba(37, 211, 102, 0.25);
+  color: #065f46;
+  box-shadow: inset 0 0 0 1px rgba(6, 95, 70, 0.08);
+}
+
+.step-highlight--whatsapp i {
+  color: #25d366;
+}
+
+.step-highlight--whatsapp div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.step-highlight--whatsapp strong {
+  font-size: 1rem;
+}
+
+.step-highlight--whatsapp span {
+  font-weight: 500;
+}
+
+.whatsapp-preview {
+  margin-top: 2.5rem;
+  background: linear-gradient(135deg, rgba(220, 248, 198, 0.7), rgba(255, 255, 255, 0.95));
+  border-radius: 26px;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  box-shadow: 0 30px 60px rgba(16, 185, 129, 0.22);
+  border: 1px solid rgba(18, 140, 126, 0.18);
+}
+
+.whatsapp-preview__header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+
+.whatsapp-preview__header i {
+  font-size: 1.6rem;
+  color: #128c7e;
+}
+
+.whatsapp-preview__header span {
+  display: block;
+  font-size: 0.85rem;
+  color: #0f172a;
+  opacity: 0.7;
+}
+
+.whatsapp-preview__header strong {
+  font-size: 1.05rem;
+  color: #0f172a;
+}
+
+.whatsapp-preview__note {
+  margin-bottom: 1rem;
+  color: #0f172a;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+.whatsapp-preview__message {
+  background: #fff;
+  border-radius: 18px;
+  padding: 1.2rem 1.4rem;
+  white-space: pre-wrap;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #0f172a;
+  border: 1px solid rgba(18, 140, 126, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(18, 140, 126, 0.08);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.whatsapp-preview__message::-webkit-scrollbar {
+  width: 6px;
+}
+
+.whatsapp-preview__message::-webkit-scrollbar-thumb {
+  background: rgba(18, 140, 126, 0.35);
+  border-radius: 999px;
 }
 
 @media (max-width: 900px) {
