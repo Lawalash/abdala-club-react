@@ -400,39 +400,6 @@ export default function RegistrationForm() {
     }
   }, [form.zipcode])
 
-  const handleSubmit = useCallback((event) => {
-    event.preventDefault()
-    if (!validateStep()) return
-
-    const formData = {
-      ...form,
-      summary,
-      submittedAt: new Date().toISOString()
-    }
-
-    const whatsappNumber = '5583993725984'
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappInfo.messageText)}`
-
-    if (typeof window !== 'undefined') {
-      window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
-    }
-
-    console.log('Dados do cadastro:', formData)
-  }, [form, summary, validateStep, whatsappInfo.messageText])
-
-  const selectPlan = useCallback((key) => {
-    setForm(prev => ({ ...prev, plan: key, frequency: '' }))
-    setShowFeaturesFor(key)
-    setErrors(prev => {
-      const { plan: _plan, frequency: _frequency, ...rest } = prev
-      return rest
-    })
-  }, [])
-
-  const togglePlanFeatures = useCallback((key) => {
-    setShowFeaturesFor(prev => (prev === key ? null : key))
-  }, [])
-
   const selectedPlan = PLAN_CONFIG[form.plan]
   const planHasVariants = !!selectedPlan?.variants
 
@@ -494,6 +461,39 @@ export default function RegistrationForm() {
       messageText: messageLines.join('\n')
     }
   }, [form, selectedPlan, summary])
+
+  const handleSubmit = useCallback((event) => {
+    event.preventDefault()
+    if (!validateStep()) return
+
+    const formData = {
+      ...form,
+      summary,
+      submittedAt: new Date().toISOString()
+    }
+
+    const whatsappNumber = '5583993725984'
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappInfo.messageText)}`
+
+    if (typeof window !== 'undefined') {
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+    }
+
+    console.log('Dados do cadastro:', formData)
+  }, [form, summary, validateStep, whatsappInfo.messageText])
+
+  const selectPlan = useCallback((key) => {
+    setForm(prev => ({ ...prev, plan: key, frequency: '' }))
+    setShowFeaturesFor(key)
+    setErrors(prev => {
+      const { plan: _plan, frequency: _frequency, ...rest } = prev
+      return rest
+    })
+  }, [])
+
+  const togglePlanFeatures = useCallback((key) => {
+    setShowFeaturesFor(prev => (prev === key ? null : key))
+  }, [])
 
   return (
     <div className="registration-container white-bg">
