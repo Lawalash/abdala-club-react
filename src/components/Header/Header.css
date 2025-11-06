@@ -152,8 +152,8 @@
 
 .site-header--static {
   position: static;
-  background: #ffffff;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.85));
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
 }
 
 .site-header--static .site-header-inner {
@@ -165,18 +165,19 @@
 
 .site-header--static .logo,
 .site-header--static .logo-text {
-  color: #1f2937;
+  color: rgba(255,255,255,0.95);
 }
 
 .site-header--static .nav-toggle {
-  border-color: rgba(15, 23, 42, 0.08);
-  background: #ffffff;
-  color: #1f2937;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255,255,255,0.95);
 }
 
 .site-header--static .nav-toggle:hover {
-  background: rgba(255,107,0,0.12);
-  color: var(--primary);
+  background: rgba(255, 107, 0, 0.18);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .site-header--static .main-nav ul li a,
@@ -185,10 +186,10 @@
 .site-header--static .main-nav ul li a:active,
 .site-header--static .main-nav ul li a:focus,
 .site-header--static .main-nav ul li a > * {
-  color: rgba(17, 24, 39, 0.9);
+  color: rgba(255,255,255,0.9);
 }
 
 .site-header--static .main-nav ul li a:hover {
   color: var(--primary);
-  background: rgba(255,107,0,0.08);
+  background: rgba(255,107,0,0.12);
 }
